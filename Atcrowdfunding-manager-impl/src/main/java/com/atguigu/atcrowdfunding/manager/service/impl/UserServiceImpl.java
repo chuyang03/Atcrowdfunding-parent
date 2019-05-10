@@ -19,7 +19,6 @@ public class UserServiceImpl implements UserService {
     public User queryUserLogin(Map<String, Object> paramMap) {
 
         User user = userMapper.queryUserLogin(paramMap);
-        System.out.println("1234342");
 
         if (user == null){
             throw new LoginFailException("用户账号或者密码不正确！");

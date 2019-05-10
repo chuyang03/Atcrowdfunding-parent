@@ -2,11 +2,13 @@ package com.atguigu.atcrowdfunding.controller;
 
 import com.atguigu.atcrowdfunding.bean.User;
 import com.atguigu.atcrowdfunding.manager.service.UserService;
+import com.atguigu.atcrowdfunding.util.AjaxResult;
 import com.atguigu.atcrowdfunding.util.Const;
 import javafx.beans.binding.ObjectExpression;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpSession;
 import java.util.HashMap;
@@ -45,20 +47,59 @@ public class DispatcherController {
         return "main";
     }
 
-    //登陆用户
+    //异步请求登陆，使用ajax
+    //@ResponseBody  结合Jkson组件，将返回结果转换为字符串，将JSON以流的形式返回给客户端
+    @ResponseBody
     @RequestMapping("/doLogin")
-    public String doLogin(String loginacct, String userpswd, String type, HttpSession session){
+    public Object doLogin(String loginacct, String userpswd, String type, HttpSession session){
 
-        Map<String, Object> paramMap = new HashMap<>();
-        paramMap.put("loginacct", loginacct);
-        paramMap.put("userpswd", userpswd);
-        paramMap.put("type", type);
+        AjaxResult result = new AjaxResult();
 
-        User user = userService.queryUserLogin(paramMap);
+        try{
+            Map<String, Object> paramMap = new HashMap<>();
+            paramMap.put("loginacct", loginacct);
+            paramMap.put("userpswd", userpswd);
+            paramMap.put("type", type);
+//            System.out.println(paramMap.get("loginacct"));
+//            System.out.println(paramMap.get("userpswd"));
 
-        session.setAttribute(Const.LOGIN_USER, user);
+            User user = userService.queryUserLogin(paramMap);
 
-        //重定向操作可以使得下次刷新浏览器不会重复登陆，即重复提交表单（重定向到另一个页面了）
-        return "redirect:/main.htm";
+            session.setAttribute(Const.LOGIN_USER, user);
+
+            result.setSuccess(true);
+            //返回的值是一个json类型数据
+            //{"success":true}
+        }catch (Exception e){
+            result.setMessage("登陆失败！");
+            e.printStackTrace();
+            result.setSuccess(false);
+
+            //{"message":"登陆失败！", "success":false}
+        }
+
+        return result;
+        //返回的值是一个json类型数据,result的值就是一个json数据，如下所示
+        //{"success":true}
     }
+
+
+    //同步请求  登陆用户
+//    @RequestMapping("/doLogin")
+//    public String doLogin(String loginacct, String userpswd, String type, HttpSession session){
+//
+//        Map<String, Object> paramMap = new HashMap<>();
+//        paramMap.put("loginacct", loginacct);
+//        paramMap.put("userpswd", userpswd);
+//        paramMap.put("type", type);
+//        System.out.println(paramMap.get("loginacct"));
+//        System.out.println(paramMap.get("userpswd"));
+//
+//        User user = userService.queryUserLogin(paramMap);
+//
+//        session.setAttribute(Const.LOGIN_USER, user);
+//
+//        //重定向操作可以使得下次刷新浏览器不会重复登陆，即重复提交表单（重定向到另一个页面了）
+//        return "redirect:/main.htm";
+//    }
 }

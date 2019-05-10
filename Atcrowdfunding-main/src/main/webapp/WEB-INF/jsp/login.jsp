@@ -33,15 +33,15 @@
         ${exception.message }
         <h2 class="form-signin-heading"><i class="glyphicon glyphicon-log-in"></i> 用户登录</h2>
         <div class="form-group has-success has-feedback">
-            <input type="text" class="form-control" id="inputSuccess4" value="chuyang" name="loginacct" placeholder="请输入登录账号" autofocus>
+            <input type="text" class="form-control" id="floginacct" value="chuyang" name="loginacct" placeholder="请输入登录账号" autofocus>
             <span class="glyphicon glyphicon-user form-control-feedback"></span>
         </div>
         <div class="form-group has-success has-feedback">
-            <input type="password" class="form-control" id="inputSuccess4"value="123" name="userpswd" placeholder="请输入登录密码" style="margin-top:10px;">
+            <input type="password" class="form-control" id="fuserpswd"value="123" name="userpswd" placeholder="请输入登录密码" style="margin-top:10px;">
             <span class="glyphicon glyphicon-lock form-control-feedback"></span>
         </div>
         <div class="form-group has-success has-feedback">
-            <select class="form-control" name="type" >
+            <select id="ftype" class="form-control" name="type" >
                 <option value="member">会员</option>
                 <%--selected关键字表示默认是管理--%>
                 <option value="user" selected>管理</option>
@@ -66,9 +66,45 @@
 <script src="${APP_PATH }/bootstrap/js/bootstrap.min.js"></script>
 <script>
     function dologin() {
+        //根据id选择器获得选择器，然后取值
+        var floginacct = $("#floginacct");
+        var fuserpswd = $("#fuserpswd");
+        var ftype = $("#ftype");
+
+        // alert(fuserpswd.val());
+
+        //使用ajax发送异步请求
+        $.ajax({
+            type : "POST",
+            //data为json数据类型
+            data : {
+                "loginacct" : floginacct.val(),
+                "userpswd" : fuserpswd.val(),
+                "type" : ftype.val()
+            },
+            url : "${APP_PATH}/doLogin.do",
+            beforeSend : function(){
+                //一般作表单数据校验
+                return true;
+            },
+            success : function(result){
+
+                //result的值是这个：{"success":true}或者{"message":"登陆失败！", "success":false}
+                if (result.success) {
+                    alert("ok");
+                }else {
+                    alert("not ok");
+                }
+
+            },
+            error : function(){
+
+                alert("error");
+            }
+        });
 
         //提交表单 然后找DispatcherController
-        $("#loginForm").submit();
+        // $("#loginForm").submit();
 
         // var type = $(":selected").val();
         // if ( type == "user" ) {
