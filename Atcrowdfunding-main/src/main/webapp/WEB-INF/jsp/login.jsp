@@ -64,6 +64,7 @@
 </div>
 <script src="${APP_PATH }/jquery/jquery-2.1.1.min.js"></script>
 <script src="${APP_PATH }/bootstrap/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="${APP_PATH }/jquery/layer/layer.js"></script>
 <script>
     function dologin() {
         //根据id选择器获得选择器，然后取值
@@ -73,6 +74,28 @@
 
         // alert(fuserpswd.val());
 
+        //表单数据校验
+        //对于表单数据而言不能用null进行判断，如果文本框什么都不输入，获取的是""（空字符串）
+        //$.trim() 函数是去除字符串两端的空格
+        if ($.trim(floginacct.val()) == ""){
+            // alert("用户账号不能为空，请输入用户名");
+
+            layer.msg("用户账号不能为空，请输入用户名!", {time:1000, icon:5, shift:6}, function(){
+                //回调函数
+
+                //val（）函数无参数时是获取数据，有参数时是赋值
+                floginacct.val("");
+                //使光标定位到当前文本框
+                floginacct.focus();
+
+            });
+
+
+            //return false 表示流程不往后执行
+            return false;
+        }
+
+        var loadingIndex = -1;
         //使用ajax发送异步请求
         $.ajax({
             type : "POST",
@@ -84,6 +107,9 @@
             },
             url : "${APP_PATH}/doLogin.do",
             beforeSend : function(){
+
+                loadingIndex = layer.msg("处理中", {icon: 16});
+
                 //一般作表单数据校验
                 return true;
             },
@@ -91,15 +117,16 @@
 
                 //result的值是这个：{"success":true}或者{"message":"登陆失败！", "success":false}
                 if (result.success) {
-                    alert("ok");
+                    //密码验证成功后跳转到主页面
+                    window.location.href = "${APP_PATH }/main.htm"
                 }else {
-                    alert("not ok");
+                    layer.msg(result.message, {time:1000, icon:5, shift:6});
                 }
 
             },
             error : function(){
 
-                alert("error");
+                layer.msg("登陆失败！", {time:1000, icon:5, shift:6});
             }
         });
 

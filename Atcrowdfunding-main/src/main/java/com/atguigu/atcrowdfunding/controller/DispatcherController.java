@@ -4,6 +4,7 @@ import com.atguigu.atcrowdfunding.bean.User;
 import com.atguigu.atcrowdfunding.manager.service.UserService;
 import com.atguigu.atcrowdfunding.util.AjaxResult;
 import com.atguigu.atcrowdfunding.util.Const;
+import com.atguigu.atcrowdfunding.util.MD5Util;
 import javafx.beans.binding.ObjectExpression;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -41,10 +42,23 @@ public class DispatcherController {
         return "register";
     }
 
+    //去到主页面
     @RequestMapping("/main")
     public String main(){
 
         return "main";
+    }
+
+    //退出登录
+    @RequestMapping("/logout")
+    public String logout(HttpSession session){
+
+
+        //用户退出登录时销毁seeion对象，或者清空session域
+        session.invalidate();
+
+        //重定向到首页面
+        return "redirect:/index.htm";
     }
 
     //异步请求登陆，使用ajax
@@ -58,7 +72,8 @@ public class DispatcherController {
         try{
             Map<String, Object> paramMap = new HashMap<>();
             paramMap.put("loginacct", loginacct);
-            paramMap.put("userpswd", userpswd);
+            //将密码加密
+            paramMap.put("userpswd", MD5Util.digest(userpswd));
             paramMap.put("type", type);
 //            System.out.println(paramMap.get("loginacct"));
 //            System.out.println(paramMap.get("userpswd"));
