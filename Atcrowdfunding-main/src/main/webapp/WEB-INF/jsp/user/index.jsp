@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
          pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="C" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html lang="zh_CN">
 <head>
@@ -159,34 +160,52 @@
                             </thead>
                             <tbody>
 
-                            <%--遍历userList--%>
-                            <c:forEach items="${page.datas }" var="user" varStatus="status">
-                                <tr>
-                                    <td>${status.count }</td>
-                                    <td><input type="checkbox"></td>
-                                    <td>${user.loginacct }</td>
-                                    <td>${user.username }</td>
-                                    <td>${user.email }</td>
-                                    <td>
-                                        <button type="button" class="btn btn-success btn-xs"><i class=" glyphicon glyphicon-check"></i></button>
-                                        <button type="button" class="btn btn-primary btn-xs"><i class=" glyphicon glyphicon-pencil"></i></button>
-                                        <button type="button" class="btn btn-danger btn-xs"><i class=" glyphicon glyphicon-remove"></i></button>
-                                    </td>
-                                </tr>
-                            </c:forEach>
+                            <%--遍历userList  items=   表示遍历map中的key，这里的page就是key
+                                ${page.datas }获取的方式，是找到Page类，然后调用getDatas()方法，获得userList
+                            --%>
+<%--                            <c:forEach items="${page.datas }" var="user" varStatus="status">--%>
+<%--                                <tr>--%>
+
+<%--                                    <td>${status.count }</td>--%>
+<%--                                    <td><input type="checkbox"></td>--%>
+<%--                                    <td>${user.loginacct }</td>--%>
+<%--                                    <td>${user.username }</td>--%>
+<%--                                    <td>${user.email }</td>--%>
+<%--                                    <td>--%>
+<%--                                        <button type="button" class="btn btn-success btn-xs"><i class=" glyphicon glyphicon-check"></i></button>--%>
+<%--                                        <button type="button" class="btn btn-primary btn-xs"><i class=" glyphicon glyphicon-pencil"></i></button>--%>
+<%--                                        <button type="button" class="btn btn-danger btn-xs"><i class=" glyphicon glyphicon-remove"></i></button>--%>
+<%--                                    </td>--%>
+<%--                                </tr>--%>
+<%--                            </c:forEach>--%>
 
                             </tbody>
                             <tfoot>
                             <tr >
                                 <td colspan="6" align="center">
                                     <ul class="pagination">
-                                        <li class="disabled"><a href="#">上一页</a></li>
-                                        <li class="active"><a href="#">1 <span class="sr-only">(current)</span></a></li>
-                                        <li><a href="#">2</a></li>
-                                        <li><a href="#">3</a></li>
-                                        <li><a href="#">4</a></li>
-                                        <li><a href="#">5</a></li>
-                                        <li><a href="#">下一页</a></li>
+<%--                                        <C:if test="${page.pageno==1 }">--%>
+<%--                                            <li class="disabled"><a href="#">上一页</a></li>--%>
+<%--                                        </C:if>--%>
+<%--                                        <C:if test="${page.pageno!=1}">--%>
+<%--                                            <li><a href="#" onclick="pageChange(${page.pageno-1 })">上一页</a></li>--%>
+<%--                                        </C:if>--%>
+
+
+<%--                                        <c:forEach begin="1" end="${page.totalno }" var="num">--%>
+<%--                                            <li--%>
+<%--                                                    <c:if test="${page.pageno==num }">--%>
+<%--                                                            class="active"--%>
+<%--                                                    </c:if>--%>
+<%--                                            ><a href="#" onclick="pageChange(${num})">${num}</a></li>--%>
+<%--                                        </c:forEach>--%>
+
+<%--                                        <C:if test="${page.pageno==page.totalno }">--%>
+<%--                                            <li class="disabled"><a href="#">下一页</a></li>--%>
+<%--                                        </C:if>--%>
+<%--                                        <C:if test="${page.pageno!=page.totalno}">--%>
+<%--                                            <li><a href="#" onclick="pageChange(${page.pageno+1 })">下一页</a></li>--%>
+<%--                                        </C:if>--%>
                                     </ul>
                                 </td>
                             </tr>
@@ -203,7 +222,10 @@
 <script src="${APP_PATH }/jquery/jquery-2.1.1.min.js"></script>
 <script src="${APP_PATH }/bootstrap/js/bootstrap.min.js"></script>
 <script src="${APP_PATH }/script/docs.min.js"></script>
+<script type="text/javascript" src="${APP_PATH }/jquery/layer/layer.js"></script>
+
 <script type="text/javascript">
+<%--    页面加载完就执行的函数--%>
     $(function () {
         $(".list-group-item").click(function(){
             if ( $(this).find("ul") ) {
@@ -215,6 +237,8 @@
                 }
             }
         });
+
+        queryPageUser(1);
     });
     $("tbody .btn-success").click(function(){
         window.location.href = "assignRole.html";
@@ -222,6 +246,105 @@
     $("tbody .btn-primary").click(function(){
         window.location.href = "edit.html";
     });
+
+
+    //点击上一页的跳转函数
+    function pageChange(pageno) {
+
+        //window.location.href = "${APP_PATH }/user/index.do?pageno="+pageno;
+
+        queryPageUser(pageno);
+    }
+
+    var loadingIndex = -1;
+    function queryPageUser(pageno) {
+        //异步请求方式，当页面加载完还没有取到数据，直接发送异步请求
+        $.ajax({
+            type : "POST",
+            data : {
+                "pageno" : pageno,
+                "pagesize" : 10
+            },
+            url : "${APP_PATH}/user/index.do",
+            beforeSend(){
+
+                loadingIndex = layer.load(2, {time : 10*1000});
+                return true;
+            },
+
+            success : function(result){
+                layer.close(loadingIndex);
+
+                if (result.success){
+                    var page = result.page;
+                    var data = page.datas;
+
+                    var content = '';
+                    //往静态页面中填充数据,   function(i, n)中i表示索引，n表示数组或者集合中的元素，在这里n表示一个user对象
+                    $.each(data, function(i, n){
+
+                        content+='     <tr>';
+
+                        content+='         <td>'+(i+1)+'</td>';
+                        content+='         <td><input type="checkbox"></td>';
+                        content+='         <td>'+n.loginacct+'</td>';
+                        content+='         <td>'+n.username+'</td>';
+                        content+='         <td>'+n.email+'</td>';
+                        content+='         <td>';
+                        content+='             <button type="button" class="btn btn-success btn-xs"><i class=" glyphicon glyphicon-check"></i></button>';
+                        content+='             <button type="button" class="btn btn-primary btn-xs"><i class=" glyphicon glyphicon-pencil"></i></button>';
+                        content+='             <button type="button" class="btn btn-danger btn-xs"><i class=" glyphicon glyphicon-remove"></i></button>';
+                        content+='         </td>';
+                        content+='     </tr>';
+
+                    });
+
+                    $("tbody").html(content);
+
+                    //页面导航条显示，上一页，下一页
+                    var contentBar = '';
+
+                    if(page.pageno==1){
+
+                        contentBar += '<li class="disabled"><a href="#">上一页</a></li>';
+                    }else{
+                        contentBar += '<li><a href="#" onclick="pageChange('+(page.pageno-1)+')">上一页</a></li>';
+                    }
+
+                    for(var i=1; i<=page.totalno; i++){
+                        contentBar += '<li';
+
+                        if (page.pageno==i){
+                            //这个地方拼串的时候，字符串前面有一个空格，否则显示出来的样式有问题
+                            contentBar += ' class="active"';
+                        }
+
+                        contentBar += '><a href="#" onclick="pageChange('+i+')">'+i+'</a></li>';
+
+                    }
+
+
+                    if(page.pageno==page.totalno){
+
+                        contentBar += '<li class="disabled"><a href="#">下一页</a></li>';
+                    }else{
+                        contentBar += '<li><a href="#" onclick="pageChange('+(page.pageno+1)+')">下一页</a></li>';
+                    }
+
+                    $(".pagination").html(contentBar);
+
+                } else {
+
+                    layer.msg(result.message, {time:1000, icon:5, shift:6});
+                }
+            },
+
+            error : function(){
+
+                layer.msg("加载数据失败！", {time:1000, icon:5, shift:6});
+            }
+        });
+    }
 </script>
 </body>
 </html>

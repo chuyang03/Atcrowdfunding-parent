@@ -45,4 +45,10 @@ public class UserServiceImpl implements UserService {
 
         return page;
     }
+
+    @Override
+    public int saveUser(User user) {
+
+        return userMapper.insert(user);
+    }
 }

@@ -9,7 +9,7 @@ import java.util.List;
 public class Page {
 
     private Integer pageno; //当前页码
-    private Integer pagesize; //页面多少跳数据
+    private Integer pagesize; //页面多少条数据
     private List datas;
     private Integer totalsize; //总共多少条数据
     private Integer totalno;  // 总共多少页
@@ -47,7 +47,7 @@ public class Page {
         this.pagesize = pagesize;
     }
 
-    public List<T> getDatas() {
+    public List getDatas() {
         return datas;
     }
 
