@@ -9,9 +9,11 @@ public interface UserService {
 
     User queryUserLogin(Map<String, Object> paramMap);
 
-    Page queryPage(Integer pageno, Integer pagesize);
+    //Page queryPage(Integer pageno, Integer pagesize);
 
 
     //往用户表里添加用户，测试数据
     int saveUser(User user);
+
+    Page queryPage(Map<String,Object> paramMap);
 }

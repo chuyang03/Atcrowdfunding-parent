@@ -137,10 +137,10 @@
                         <div class="form-group has-feedback">
                             <div class="input-group">
                                 <div class="input-group-addon">查询条件</div>
-                                <input class="form-control has-success" type="text" placeholder="请输入查询条件">
+                                <input id="queryText" class="form-control has-success" type="text" placeholder="请输入查询条件">
                             </div>
                         </div>
-                        <button type="button" class="btn btn-warning"><i class="glyphicon glyphicon-search"></i> 查询</button>
+                        <button id="queryBtn" type="button" class="btn btn-warning"><i class="glyphicon glyphicon-search"></i> 查询</button>
                     </form>
                     <button type="button" class="btn btn-danger" style="float:right;margin-left:10px;"><i class=" glyphicon glyphicon-remove"></i> 删除</button>
                     <button type="button" class="btn btn-primary" style="float:right;" onclick="window.location.href='add.html'"><i class="glyphicon glyphicon-plus"></i> 新增</button>
@@ -160,52 +160,14 @@
                             </thead>
                             <tbody>
 
-                            <%--遍历userList  items=   表示遍历map中的key，这里的page就是key
-                                ${page.datas }获取的方式，是找到Page类，然后调用getDatas()方法，获得userList
-                            --%>
-<%--                            <c:forEach items="${page.datas }" var="user" varStatus="status">--%>
-<%--                                <tr>--%>
-
-<%--                                    <td>${status.count }</td>--%>
-<%--                                    <td><input type="checkbox"></td>--%>
-<%--                                    <td>${user.loginacct }</td>--%>
-<%--                                    <td>${user.username }</td>--%>
-<%--                                    <td>${user.email }</td>--%>
-<%--                                    <td>--%>
-<%--                                        <button type="button" class="btn btn-success btn-xs"><i class=" glyphicon glyphicon-check"></i></button>--%>
-<%--                                        <button type="button" class="btn btn-primary btn-xs"><i class=" glyphicon glyphicon-pencil"></i></button>--%>
-<%--                                        <button type="button" class="btn btn-danger btn-xs"><i class=" glyphicon glyphicon-remove"></i></button>--%>
-<%--                                    </td>--%>
-<%--                                </tr>--%>
-<%--                            </c:forEach>--%>
-
+                            <!--这个地方进行异步数据填充-->
                             </tbody>
                             <tfoot>
                             <tr >
                                 <td colspan="6" align="center">
                                     <ul class="pagination">
-<%--                                        <C:if test="${page.pageno==1 }">--%>
-<%--                                            <li class="disabled"><a href="#">上一页</a></li>--%>
-<%--                                        </C:if>--%>
-<%--                                        <C:if test="${page.pageno!=1}">--%>
-<%--                                            <li><a href="#" onclick="pageChange(${page.pageno-1 })">上一页</a></li>--%>
-<%--                                        </C:if>--%>
 
-
-<%--                                        <c:forEach begin="1" end="${page.totalno }" var="num">--%>
-<%--                                            <li--%>
-<%--                                                    <c:if test="${page.pageno==num }">--%>
-<%--                                                            class="active"--%>
-<%--                                                    </c:if>--%>
-<%--                                            ><a href="#" onclick="pageChange(${num})">${num}</a></li>--%>
-<%--                                        </c:forEach>--%>
-
-<%--                                        <C:if test="${page.pageno==page.totalno }">--%>
-<%--                                            <li class="disabled"><a href="#">下一页</a></li>--%>
-<%--                                        </C:if>--%>
-<%--                                        <C:if test="${page.pageno!=page.totalno}">--%>
-<%--                                            <li><a href="#" onclick="pageChange(${page.pageno+1 })">下一页</a></li>--%>
-<%--                                        </C:if>--%>
+                                        <!--这个地方进行异步数据填充-->
                                     </ul>
                                 </td>
                             </tr>
@@ -256,15 +218,22 @@
         queryPageUser(pageno);
     }
 
+
+    //ajax请求中传输的json数据
+
+    var jsonObj = {
+        "pageno" : 1,
+        "pagesize" : 10
+    };
+
     var loadingIndex = -1;
     function queryPageUser(pageno) {
+
+        jsonObj.pageno = pageno;
         //异步请求方式，当页面加载完还没有取到数据，直接发送异步请求
         $.ajax({
             type : "POST",
-            data : {
-                "pageno" : pageno,
-                "pagesize" : 10
-            },
+            data : jsonObj,
             url : "${APP_PATH}/user/index.do",
             beforeSend(){
 
@@ -345,6 +314,16 @@
             }
         });
     }
+
+    $("#queryBtn").click(function(){
+        var queryText = $("#queryText").val();
+
+        //添加json数据
+        jsonObj.queryText = queryText;
+        //在此调用这个函数的时候，传入的json数据有三个参数
+        queryPageUser(1);
+    });
+
 </script>
 </body>
 </html>

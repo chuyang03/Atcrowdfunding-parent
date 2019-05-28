@@ -33,7 +33,12 @@ public interface UserMapper {
     //登陆时，根据用户名，密码，类型查询用户
     User queryUserLogin(Map<String, Object> paramMap);
 
-    List<User> queryList(@Param("startIndex") Integer startIndex, @Param("pagesize") Integer pagesize);
+    //List<User> queryList(@Param("startIndex") Integer startIndex, @Param("pagesize") Integer pagesize);
 
-    Integer queryCount();
+    //Integer queryCount();
+
+    //用map作为方法参数的条件查询
+    List<User> queryList(Map<String, Object> paramMap);
+
+    Integer queryCount(Map<String, Object> paramMap);
 }
