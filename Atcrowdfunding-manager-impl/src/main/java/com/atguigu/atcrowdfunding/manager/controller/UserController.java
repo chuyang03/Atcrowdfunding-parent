@@ -1,5 +1,6 @@
 package com.atguigu.atcrowdfunding.manager.controller;
 
+import com.atguigu.atcrowdfunding.bean.User;
 import com.atguigu.atcrowdfunding.manager.service.UserService;
 import com.atguigu.atcrowdfunding.util.AjaxResult;
 import com.atguigu.atcrowdfunding.util.Page;
@@ -41,6 +42,36 @@ public class UserController {
 
 
         return "user/index";
+    }
+
+    //去到新增用户页面
+    @RequestMapping("/toAdd")
+    public String toAdd(){
+
+
+        return "user/add";
+    }
+
+    //添加用户
+    @ResponseBody
+    @RequestMapping("/doAdd")
+    public Object doAdd(User user){
+
+        AjaxResult result = new AjaxResult();
+        try {
+            int count = userService.saveUser(user);
+            result.setSuccess(count == 1);
+
+        }catch (Exception e){
+
+            result.setSuccess(false);
+            e.printStackTrace();
+            result.setMessage("添加用户失败！");
+        }
+
+
+
+        return result;  //将对象序列化为JSON字符串，以流的形式返回
     }
 
     //异步请求

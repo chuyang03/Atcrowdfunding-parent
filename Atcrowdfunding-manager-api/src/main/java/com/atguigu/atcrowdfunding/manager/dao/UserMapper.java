@@ -14,6 +14,7 @@ public interface UserMapper {
 
     int deleteByPrimaryKey(Integer id);
 
+    //返回的是操作的数据条数
     int insert(User record);
 
     int insertSelective(User record);

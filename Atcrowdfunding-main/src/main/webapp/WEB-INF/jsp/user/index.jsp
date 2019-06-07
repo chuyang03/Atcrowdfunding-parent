@@ -36,7 +36,7 @@
                 <li style="padding-top:8px;">
                     <div class="btn-group">
                         <button type="button" class="btn btn-default btn-success dropdown-toggle" data-toggle="dropdown">
-                            <i class="glyphicon glyphicon-user"></i> 张三 <span class="caret"></span>
+                            <i class="glyphicon glyphicon-user"></i> ${sessionScope.user.username} <span class="caret"></span>
                         </button>
                         <ul class="dropdown-menu" role="menu">
                             <li><a href="#"><i class="glyphicon glyphicon-cog"></i> 个人设置</a></li>
@@ -71,7 +71,7 @@
                         <span><i class="glyphicon glyphicon glyphicon-tasks"></i> 权限管理 <span class="badge" style="float:right">3</span></span>
                         <ul style="margin-top:10px;">
                             <li style="height:30px;">
-                                <a href="user.html" style="color:red;"><i class="glyphicon glyphicon-user"></i> 用户维护</a>
+                                <a href="${APP_PATH}/user/toIndex.htm" style="color:red;"><i class="glyphicon glyphicon-user"></i> 用户维护</a>
                             </li>
                             <li style="height:30px;">
                                 <a href="role.html"><i class="glyphicon glyphicon-king"></i> 角色维护</a>
@@ -143,7 +143,7 @@
                         <button id="queryBtn" type="button" class="btn btn-warning"><i class="glyphicon glyphicon-search"></i> 查询</button>
                     </form>
                     <button type="button" class="btn btn-danger" style="float:right;margin-left:10px;"><i class=" glyphicon glyphicon-remove"></i> 删除</button>
-                    <button type="button" class="btn btn-primary" style="float:right;" onclick="window.location.href='add.html'"><i class="glyphicon glyphicon-plus"></i> 新增</button>
+                    <button type="button" class="btn btn-primary" style="float:right;" onclick="window.location.href='${APP_PATH}/user/toAdd.htm'"><i class="glyphicon glyphicon-plus"></i> 新增</button>
                     <br>
                     <hr style="clear:both;">
                     <div class="table-responsive">

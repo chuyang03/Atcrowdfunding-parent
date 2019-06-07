@@ -109,7 +109,7 @@
         </if>
     </delete>
 
-    <insert id="insert" parameterType="com.atguigu.atcrowdfunding.bean.User" >
+    <insert id="insert" parameterType="com.atguigu.atcrowdfunding.bean.User" useGeneratedKeys="true" keyProperty="id">
         insert into t_user (id, loginacct, userpswd,
             username, email, createtime
             )
@@ -266,6 +266,7 @@
                 loginacct like concat("%", #{queryText}, "%")
             </if>
         </where>
+        order by createtime desc
         limit #{startIndex}, #{pagesize}
     </select>
 
