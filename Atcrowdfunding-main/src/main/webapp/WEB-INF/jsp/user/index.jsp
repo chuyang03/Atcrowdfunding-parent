@@ -142,7 +142,7 @@
                         </div>
                         <button id="queryBtn" type="button" class="btn btn-warning"><i class="glyphicon glyphicon-search"></i> 查询</button>
                     </form>
-                    <button type="button" class="btn btn-danger" style="float:right;margin-left:10px;"><i class=" glyphicon glyphicon-remove"></i> 删除</button>
+                    <button type="button" id="deleteBatchBtn" class="btn btn-danger" style="float:right;margin-left:10px;"><i class=" glyphicon glyphicon-remove"></i> 删除</button>
                     <button type="button" class="btn btn-primary" style="float:right;" onclick="window.location.href='${APP_PATH}/user/toAdd.htm'"><i class="glyphicon glyphicon-plus"></i> 新增</button>
                     <br>
                     <hr style="clear:both;">
@@ -151,7 +151,7 @@
                             <thead>
                             <tr >
                                 <th width="30">#</th>
-                                <th width="30"><input type="checkbox"></th>
+                                <th width="30"><input id="allCheckbox" type="checkbox"></th>
                                 <th>账号</th>
                                 <th>名称</th>
                                 <th>邮箱地址</th>
@@ -255,14 +255,14 @@
                         content+='     <tr>';
 
                         content+='         <td>'+(i+1)+'</td>';
-                        content+='         <td><input type="checkbox"></td>';
+                        content+='         <td><input type="checkbox" id="'+n.id+'"></td>';
                         content+='         <td>'+n.loginacct+'</td>';
                         content+='         <td>'+n.username+'</td>';
                         content+='         <td>'+n.email+'</td>';
                         content+='         <td>';
                         content+='             <button type="button" class="btn btn-success btn-xs"><i class=" glyphicon glyphicon-check"></i></button>';
-                        content+='             <button type="button" class="btn btn-primary btn-xs"><i class=" glyphicon glyphicon-pencil"></i></button>';
-                        content+='             <button type="button" class="btn btn-danger btn-xs"><i class=" glyphicon glyphicon-remove"></i></button>';
+                        content+='             <button type="button" onclick="window.location.href=\'${APP_PATH}/user/toUpdate.htm?id='+n.id+'\'" class="btn btn-primary btn-xs"><i class=" glyphicon glyphicon-pencil"></i></button>';
+                        content+='             <button type="button" onclick="deleteUser('+n.id+',\''+n.loginacct+'\')" class="btn btn-danger btn-xs"><i class=" glyphicon glyphicon-remove"></i></button>';
                         content+='         </td>';
                         content+='     </tr>';
 
@@ -322,6 +322,121 @@
         jsonObj.queryText = queryText;
         //在此调用这个函数的时候，传入的json数据有三个参数
         queryPageUser(1);
+    });
+
+
+    function deleteUser(id,loginacct) {
+
+
+        //点击删除按钮弹出框显示，是否删除
+        layer.confirm("确认删除【"+loginacct+"】用户吗？",  {icon: 3, title:'提示'}, function(cindex){
+            layer.close(cindex);
+            $.ajax({
+
+                type : "POST",
+                data : {
+                    "id" : id
+                },
+                url : "${APP_PATH}/user/doDelete.do",
+                beforeSend : function(){
+
+                    return true;
+                },
+                success : function(result){
+
+                    if(result.success){
+                        window.location.href = "${APP_PATH}/user/toIndex.htm";
+                    }else{
+                        layer.msg("删除用户失败", {time:1000, icon:5, shift:6});
+
+                    }
+
+                },
+                error : function(){
+
+                    layer.msg("删除用户失败", {time:1000, icon:5, shift:6});
+                }
+
+            });
+
+        }, function(cindex){
+            layer.close(cindex);
+        });
+
+    }
+
+    $("#allCheckbox").click(function () {
+
+        var checkStatus = this.checked;
+        // alert(checkStatus);
+        //根据标签选择找到表单中，input标签中type属性等于checkbox的标签有多少个
+        //  $("tbody tr td input[type='checkbox']") 获取到所有复选框，然后让这些复选框的checked的值和顶头的复选框选项一样
+        //attr("checked", checkStatus)函数的作用就是给复选框的checked属性赋值，让其与当前选中的顶头复选框的值一样，即选中全部
+        $("tbody tr td input[type='checkbox']").attr("checked", checkStatus);
+
+    });
+
+
+    $("#deleteBatchBtn").click(function () {
+
+        //input:checked这个表示找到input标签里面的checked属性，只有复选框选中的时候才有这个属性
+        var selectCheckbox = $("tbody tr td input:checked");
+
+        //判断是否选中删除的用户,selectCheckbox是一个数组
+        if (selectCheckbox.length == 0){
+
+            layer.msg("请选择至少一个用户进行删除！请选择用户！", {time:1000, icon:5, shift:6});
+
+            return false;
+        }
+        var idStr = "";
+
+        $.each(selectCheckbox, function (i, n) {
+
+            if (i!=0){
+
+                idStr += "&";
+            }
+
+            idStr += "id="+n.id;
+        });
+
+        alert(idStr);
+
+        //点击删除按钮弹出框显示，是否删除
+        layer.confirm("确认删除这些用户吗？",  {icon: 3, title:'提示'}, function(cindex){
+            layer.close(cindex);
+            $.ajax({
+
+                type : "POST",
+                data : idStr,      //url?id=5&id=6
+
+                url : "${APP_PATH}/user/doDeleteBatch.do",
+                beforeSend : function(){
+
+                    return true;
+                },
+                success : function(result){
+
+                    if(result.success){
+                        window.location.href = "${APP_PATH}/user/toIndex.htm";
+                    }else{
+                        layer.msg("删除用户失败", {time:1000, icon:5, shift:6});
+
+                    }
+
+                },
+                error : function(){
+
+                    layer.msg("删除用户失败", {time:1000, icon:5, shift:6});
+                }
+
+            });
+
+        }, function(cindex){
+            layer.close(cindex);
+        });
+
     });
 
 </script>

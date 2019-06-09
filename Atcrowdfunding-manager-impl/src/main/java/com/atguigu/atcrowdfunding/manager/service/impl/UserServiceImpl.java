@@ -84,4 +84,36 @@ public class UserServiceImpl implements UserService {
 
         return page;
     }
+
+    @Override
+    public User getUserById(Integer id) {
+        return userMapper.selectByPrimaryKey(id);
+    }
+
+    @Override
+    public int updateUser(User user) {
+        return userMapper.updateByPrimaryKey(user);
+    }
+
+    @Override
+    public int deleteUser(Integer id) {
+        return userMapper.deleteByPrimaryKey(id);
+    }
+
+    @Override
+    public int deleteBatchUser(Integer[] ids) {
+
+        int totalCount = 0;
+        for (Integer id:ids) {
+            int count = userMapper.deleteByPrimaryKey(id);
+
+            //保证返回的操作数据的条数和传进来的id值的个数一样
+            totalCount += count;
+        }
+
+        if (totalCount!=ids.length){
+            throw new RuntimeException("批量删除失败");
+        }
+        return totalCount;
+    }
 }

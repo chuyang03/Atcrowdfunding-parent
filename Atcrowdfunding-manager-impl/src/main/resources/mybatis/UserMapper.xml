@@ -234,10 +234,10 @@
     <update id="updateByPrimaryKey" parameterType="com.atguigu.atcrowdfunding.bean.User" >
         update t_user
         set loginacct = #{loginacct,jdbcType=VARCHAR},
-            userpswd = #{userpswd,jdbcType=CHAR},
+
             username = #{username,jdbcType=VARCHAR},
-            email = #{email,jdbcType=VARCHAR},
-            createtime = #{createtime,jdbcType=CHAR}
+            email = #{email,jdbcType=VARCHAR}
+
         where id = #{id,jdbcType=INTEGER}
     </update>
 
