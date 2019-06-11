@@ -225,7 +225,7 @@
             success : function(result){
 
                 if(result.success){
-                    window.location.href = "${APP_PATH}/user/toIndex.htm";
+                    window.location.href = "${APP_PATH}/user/index.htm";
                 }else{
                     layer.msg("保存用户失败", {time:1000, icon:5, shift:6});
 

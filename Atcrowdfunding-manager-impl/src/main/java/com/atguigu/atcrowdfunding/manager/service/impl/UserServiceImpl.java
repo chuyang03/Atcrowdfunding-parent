@@ -7,6 +7,7 @@ import com.atguigu.atcrowdfunding.manager.service.UserService;
 import com.atguigu.atcrowdfunding.util.Const;
 import com.atguigu.atcrowdfunding.util.MD5Util;
 import com.atguigu.atcrowdfunding.util.Page;
+import com.atguigu.atcrowdfunding.vo.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -115,5 +116,12 @@ public class UserServiceImpl implements UserService {
             throw new RuntimeException("批量删除失败");
         }
         return totalCount;
+    }
+
+    @Override
+    public int deleteBatchUserByVO(Data data) {
+
+
+        return userMapper.deleteBatchUserByVO(data);
     }
 }

@@ -5,6 +5,7 @@ import com.atguigu.atcrowdfunding.manager.service.UserService;
 import com.atguigu.atcrowdfunding.util.AjaxResult;
 import com.atguigu.atcrowdfunding.util.Page;
 import com.atguigu.atcrowdfunding.util.StringUtil;
+import com.atguigu.atcrowdfunding.vo.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -37,8 +38,8 @@ public class UserController {
 
 
     //异步请求方式，去到主页面
-    @RequestMapping("/toIndex")
-    public String toIndex(){
+    @RequestMapping("/index")
+    public String index(){
 
 
         return "user/index";
@@ -133,16 +134,17 @@ public class UserController {
     }
 
 
-    //批量删除
+    //传入的参数是一个json数据
+    //批量删除用户
     @ResponseBody
     @RequestMapping("/doDeleteBatch")
-    public Object doDeleteBatch(Integer[] id){
+    public Object doDeleteBatch(Data data){
 
         AjaxResult result = new AjaxResult();
         try {
-            int count = userService.deleteBatchUser(id);
+            int count = userService.deleteBatchUserByVO(data);
             //count == id.length 表示操作数据库的数据条数和接受到的id的条数一样返回true
-            result.setSuccess(count == id.length);
+            result.setSuccess(count == data.getDatas().size());
 
         }catch (Exception e){
 
@@ -155,6 +157,30 @@ public class UserController {
 
         return result;  //将对象序列化为JSON字符串，以流的形式返回
     }
+
+
+    //批量删除,这种方式传入的是一个拼接的字符串
+//    @ResponseBody
+//    @RequestMapping("/doDeleteBatch")
+//    public Object doDeleteBatch(Integer[] id){
+//
+//        AjaxResult result = new AjaxResult();
+//        try {
+//            int count = userService.deleteBatchUser(id);
+//            //count == id.length 表示操作数据库的数据条数和接受到的id的条数一样返回true
+//            result.setSuccess(count == id.length);
+//
+//        }catch (Exception e){
+//
+//            result.setSuccess(false);
+//            e.printStackTrace();
+//            result.setMessage("批量删除用户失败！");
+//        }
+//
+//
+//
+//        return result;  //将对象序列化为JSON字符串，以流的形式返回
+//    }
 
 
     //异步请求
@@ -184,7 +210,7 @@ public class UserController {
 
     //条件查询，没输入条件时查询的是所有数据，有查询条件时，查询按照条件查询符合要求的数据
     @ResponseBody
-    @RequestMapping("/index")
+    @RequestMapping("/doIndex")
     public Object index(@RequestParam(value = "pageno", required = false, defaultValue = "1") Integer pageno,
                         @RequestParam(value = "pagesize", required = false, defaultValue = "10")Integer pagesize,
                         String queryText){

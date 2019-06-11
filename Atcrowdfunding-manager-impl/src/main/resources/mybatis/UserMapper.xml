@@ -278,4 +278,13 @@
             </if>
         </where>
     </select>
+
+<!--    根据集合批量删除-->
+
+    <delete id="deleteBatchUserByVO" >
+        delete from t_user where id in
+        <foreach collection="datas" open="(" close=")" separator="," item="user">
+            #{user.id}
+        </foreach>
+    </delete>
 </mapper>

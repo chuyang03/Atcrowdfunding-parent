@@ -2,6 +2,7 @@ package com.atguigu.atcrowdfunding.manager.service;
 
 import com.atguigu.atcrowdfunding.bean.User;
 import com.atguigu.atcrowdfunding.util.Page;
+import com.atguigu.atcrowdfunding.vo.Data;
 
 import java.util.Map;
 
@@ -24,4 +25,7 @@ public interface UserService {
     int deleteUser(Integer id);
 
     int deleteBatchUser(Integer[] ids);
+
+    //按照传入参数是json数据进行批量删除
+    int deleteBatchUserByVO(Data data);
 }
