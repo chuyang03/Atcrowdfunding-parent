@@ -1,5 +1,6 @@
 package com.atguigu.atcrowdfunding.manager.controller;
 
+import com.atguigu.atcrowdfunding.bean.Role;
 import com.atguigu.atcrowdfunding.bean.User;
 import com.atguigu.atcrowdfunding.manager.service.UserService;
 import com.atguigu.atcrowdfunding.util.AjaxResult;
@@ -12,7 +13,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Controller
@@ -43,6 +46,83 @@ public class UserController {
 
 
         return "user/index";
+    }
+
+    //分配角色
+    @ResponseBody
+    @RequestMapping("/doAssignRole")
+    //传入的参数要和前端ajax传入json数据中的属性一样，userid
+    public Object doAssignRole(Integer userid, Data data){
+
+        AjaxResult result = new AjaxResult();
+        try {
+            //保存用户角色关系的方法
+            userService.saveUserRoleRelationship(userid, data);
+            result.setSuccess(true);
+
+        }catch (Exception e){
+
+            result.setSuccess(false);
+            e.printStackTrace();
+            result.setMessage("分配用户角色失败！");
+        }
+
+
+
+        return result;  //将对象序列化为JSON字符串，以流的形式返回
+    }
+
+    //取消角色分配
+    @ResponseBody
+    @RequestMapping("/doUnAssignRole")
+    //传入的参数要和前端ajax传入json数据中的属性一样，userid
+    public Object doUnAssignRole(Integer userid, Data data){
+
+        AjaxResult result = new AjaxResult();
+        try {
+            //保存用户角色关系的方法
+            userService.deleteUserRoleRelationship(userid, data);
+            result.setSuccess(true);
+
+        }catch (Exception e){
+
+            result.setSuccess(false);
+            e.printStackTrace();
+            result.setMessage("取消用户角色失败！");
+        }
+
+        return result;  //将对象序列化为JSON字符串，以流的形式返回
+    }
+
+    //显示角色分配页面
+    @RequestMapping("/assignRole")
+    public String assignRole(Integer id, Map map){
+
+        //获取所有角色
+        List<Role> allRoleList = userService.queryAllRole();
+
+        //根据t_user_role这个表的id值查询对应用户的roleid，一个用户的id可以对应多个角色，也就有了多个roleid
+        List<Integer> roleIds = userService.queryRoleByUserid(id);
+
+        List<Role> leftRoleList = new ArrayList<>(); //未分配角色
+
+        List<Role> rightRoleList = new ArrayList<>();  //已分配角色
+
+        for (Role role: allRoleList) {
+
+            //如果根据用户的id查询出来的对应角色id即roleid，在角色表中存在，那说明这个角色分配给这个用户了
+            if (roleIds.contains(role.getId())){
+                rightRoleList.add(role);
+            }else {
+                leftRoleList.add(role);
+            }
+        }
+
+        //返回给前端的数据，封装到map里
+        map.put("leftRoleList", leftRoleList);
+        map.put("rightRoleList", rightRoleList);
+
+        return "user/assignrole";
     }
 
     //去到新增用户页面

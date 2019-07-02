@@ -223,4 +223,20 @@
             url = #{url,jdbcType=VARCHAR}
         where id = #{id,jdbcType=INTEGER}
     </update>
+
+
+<!--    自己写的映射方法-->
+    <select id="getRootPermission" resultType="Permission">
+        select id, pid, name, icon, url from t_permission where id = 1
+    </select>
+
+
+    <select id="getChildrenPermissionByPid" parameterType="int" resultMap="BaseResultMap">
+        select id, pid, name, icon, url from t_permission where pid = #{id}
+    </select>
+
+<!--    查询所有许可树的内容-->
+    <select id="queryAllPermission" resultMap="BaseResultMap">
+        select id, pid, name, icon, url from t_permission
+    </select>
 </mapper>

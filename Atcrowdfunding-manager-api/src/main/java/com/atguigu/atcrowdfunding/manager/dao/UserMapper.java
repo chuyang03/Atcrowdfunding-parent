@@ -1,5 +1,6 @@
 package com.atguigu.atcrowdfunding.manager.dao;
 
+import com.atguigu.atcrowdfunding.bean.Role;
 import com.atguigu.atcrowdfunding.bean.User;
 import com.atguigu.atcrowdfunding.bean.UserExample;
 import com.atguigu.atcrowdfunding.vo.Data;
@@ -45,4 +46,14 @@ public interface UserMapper {
     Integer queryCount(Map<String, Object> paramMap);
 
     int deleteBatchUserByVO(Data data);
+
+    List<Role> queryAllRole();
+
+    List<Integer> queryRoleByUserid(Integer id);
+
+    //传入多个参数时使用@Param，因为传入多个参数时，mybatis会将多个参数封装成一个map，
+    // 这个注解的意思就是mybatis在封装时，指定key值
+    int saveUserRoleRelationship(@Param("userid") Integer userid, @Param("data") Data data);
+
+    int deleteUserRoleRelationship(@Param("userid") Integer userid, @Param("data") Data data);
 }

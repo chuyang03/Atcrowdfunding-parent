@@ -6,10 +6,10 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="Atcrowdfunding-potal-api" />
         <module name="Atcrowdfunding-main" />
         <module name="Atcrowdfunding-bean" />
         <module name="Atcrowdfunding-manager-impl" />
+        <module name="Atcrowdfunding-potal-api" />
         <module name="Atcrowdfunding-potal-impl" />
         <module name="Atcrowdfunding-manager-api" />
         <module name="Atcrowdfunding-common" />

@@ -1,9 +1,11 @@
 package com.atguigu.atcrowdfunding.manager.service;
 
+import com.atguigu.atcrowdfunding.bean.Role;
 import com.atguigu.atcrowdfunding.bean.User;
 import com.atguigu.atcrowdfunding.util.Page;
 import com.atguigu.atcrowdfunding.vo.Data;
 
+import java.util.List;
 import java.util.Map;
 
 public interface UserService {
@@ -28,4 +30,12 @@ public interface UserService {
 
     //按照传入参数是json数据进行批量删除
     int deleteBatchUserByVO(Data data);
+
+    List<Role> queryAllRole();
+
+    List<Integer> queryRoleByUserid(Integer id);
+
+    int saveUserRoleRelationship(Integer userid, Data data);
+
+    int deleteUserRoleRelationship(Integer userid, Data data);
 }

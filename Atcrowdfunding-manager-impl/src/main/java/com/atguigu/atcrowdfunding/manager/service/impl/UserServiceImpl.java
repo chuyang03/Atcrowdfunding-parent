@@ -1,5 +1,6 @@
 package com.atguigu.atcrowdfunding.manager.service.impl;
 
+import com.atguigu.atcrowdfunding.bean.Role;
 import com.atguigu.atcrowdfunding.bean.User;
 import com.atguigu.atcrowdfunding.exception.LoginFailException;
 import com.atguigu.atcrowdfunding.manager.dao.UserMapper;
@@ -8,6 +9,7 @@ import com.atguigu.atcrowdfunding.util.Const;
 import com.atguigu.atcrowdfunding.util.MD5Util;
 import com.atguigu.atcrowdfunding.util.Page;
 import com.atguigu.atcrowdfunding.vo.Data;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -123,5 +125,27 @@ public class UserServiceImpl implements UserService {
 
 
         return userMapper.deleteBatchUserByVO(data);
+    }
+
+    @Override
+    public List<Role> queryAllRole() {
+
+        return userMapper.queryAllRole();
+    }
+
+    @Override
+    public List<Integer> queryRoleByUserid(Integer id) {
+
+        return userMapper.queryRoleByUserid(id);
+    }
+
+    @Override
+    public int saveUserRoleRelationship(Integer userid, Data data) {
+        return userMapper.saveUserRoleRelationship(userid, data);
+    }
+
+    @Override
+    public int deleteUserRoleRelationship(Integer userid, Data data) {
+        return userMapper.deleteUserRoleRelationship(userid, data);
     }
 }
