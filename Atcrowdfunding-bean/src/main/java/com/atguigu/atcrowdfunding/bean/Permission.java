@@ -3,13 +3,6 @@ package com.atguigu.atcrowdfunding.bean;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * 
- * 
- * @author wcyong
- * 
- * @date 2019-05-09
- */
 public class Permission {
     private Integer id;
 
@@ -21,9 +14,13 @@ public class Permission {
 
     private String url;
 
-    private boolean open;
+    private boolean open = true;
 
-    private List<Permission> children = new ArrayList<>();
+    private boolean checked ;
+
+    private int level ;
+
+    private List<Permission> children = new ArrayList<Permission>();
 
     public Integer getId() {
         return id;
@@ -65,7 +62,6 @@ public class Permission {
         this.url = url == null ? null : url.trim();
     }
 
-
     public boolean isOpen() {
         return open;
     }
@@ -81,4 +77,23 @@ public class Permission {
     public void setChildren(List<Permission> children) {
         this.children = children;
     }
+
+    public boolean isChecked() {
+        return checked;
+    }
+
+    public void setChecked(boolean checked) {
+        this.checked = checked;
+    }
+
+    public int getLevel() {
+        return level;
+    }
+
+    public void setLevel(int level) {
+        this.level = level;
+    }
+
+
+
 }

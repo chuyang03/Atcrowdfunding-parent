@@ -22,10 +22,90 @@ public class PermissionController {
     @Autowired
     private PermissionService permissionService;
 
+    //去到许可树主页面
     @RequestMapping("/index")
     public String index(){
 
         return "permission/index";
+    }
+
+    //去到许可树添加页面
+    @RequestMapping("/toAdd")
+    public String toAdd(){
+
+        return "permission/add";
+    }
+
+    //去到许可树修改页面
+    @RequestMapping("/toUpdate")
+    public String toUpdate(Integer id, Map map){
+
+        Permission permission = permissionService.getPermissionById(id);
+
+        map.put("permission", permission);
+        return "permission/update";
+    }
+
+    @ResponseBody
+    @RequestMapping("/doUpdate")
+    public Object doUpdate(Permission permission){
+
+        AjaxResult result = new AjaxResult();
+
+        try {
+
+            int count = permissionService.updatePermission(permission);
+
+            result.setSuccess(count == 1);
+
+        }catch (Exception e){
+            result.setSuccess(false);
+            e.printStackTrace();
+            result.setMessage("修改许可树数据失败！");
+        }
+        return result;
+    }
+
+    //异步，删除许可
+    @ResponseBody
+    @RequestMapping("/deletePermission")
+    public Object deletePermission(Integer id){
+
+        AjaxResult result = new AjaxResult();
+
+        try {
+
+            int count = permissionService.deletePermission(id);
+
+            result.setSuccess(count == 1);
+
+        }catch (Exception e){
+            result.setSuccess(false);
+            e.printStackTrace();
+            result.setMessage("删除许可树数据失败！");
+        }
+        return result;
+    }
+
+    //异步返回许可树数据
+    @ResponseBody
+    @RequestMapping("/doAdd")
+    public Object doAdd(Permission permission){
+
+        AjaxResult result = new AjaxResult();
+
+        try {
+
+            int count = permissionService.savePermission(permission);
+
+            result.setSuccess(count == 1);
+
+        }catch (Exception e){
+            result.setSuccess(false);
+            e.printStackTrace();
+            result.setMessage("添加许可树数据失败！");
+        }
+        return result;
     }
 
 
@@ -59,6 +139,8 @@ public class PermissionController {
                     //直接根据child的pid，从map中找出他的父节点
                     Permission parent = map.get(child.getPid());
 
+                    //每个permission中都有一个list集合属性来存储孩子节点，
+                    // 当遍历完所有节点时，所有的父节点中都封装了一个孩子节点集合属性
                     parent.getChildren().add(child);
                 }
             }

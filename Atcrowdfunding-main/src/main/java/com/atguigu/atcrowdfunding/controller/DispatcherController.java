@@ -1,5 +1,6 @@
 package com.atguigu.atcrowdfunding.controller;
 
+import com.atguigu.atcrowdfunding.bean.Permission;
 import com.atguigu.atcrowdfunding.bean.User;
 import com.atguigu.atcrowdfunding.manager.service.UserService;
 import com.atguigu.atcrowdfunding.util.AjaxResult;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpSession;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Controller
@@ -44,7 +46,39 @@ public class DispatcherController {
 
     //去到主页面
     @RequestMapping("/main")
-    public String main(){
+    public String main(HttpSession session){
+
+        //加载当前登陆用户所拥有的许可权限
+        User user = (User)session.getAttribute(Const.LOGIN_USER);
+
+        List<Permission> myPermissions = userService.queryPermissionsByUserid(user.getId());
+
+        Permission permissionRoot = null;
+
+        Map<Integer, Permission> map = new HashMap<>();
+        for (Permission child: myPermissions){  //假如100次循环
+
+            map.put(child.getId(), child);
+        }
+
+        for (Permission permission: myPermissions){   //100次循环
+
+            Permission child = permission;
+            if (child.getPid() == 0){
+                //根节点
+                permissionRoot = permission;
+            }else {
+
+                //直接根据child的pid，从map中找出他的父节点
+                Permission parent = map.get(child.getPid());
+
+                //每个permission中都有一个list集合属性来存储孩子节点，
+                // 当遍历完所有节点时，所有的父节点中都封装了一个孩子节点集合属性
+                parent.getChildren().add(child);
+            }
+        }
+
+        session.setAttribute("permissionRoot", permissionRoot);
 
         return "main";
     }

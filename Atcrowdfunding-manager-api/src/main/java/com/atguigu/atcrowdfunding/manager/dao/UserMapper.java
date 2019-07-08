@@ -1,5 +1,6 @@
 package com.atguigu.atcrowdfunding.manager.dao;
 
+import com.atguigu.atcrowdfunding.bean.Permission;
 import com.atguigu.atcrowdfunding.bean.Role;
 import com.atguigu.atcrowdfunding.bean.User;
 import com.atguigu.atcrowdfunding.bean.UserExample;
@@ -56,4 +57,6 @@ public interface UserMapper {
     int saveUserRoleRelationship(@Param("userid") Integer userid, @Param("data") Data data);
 
     int deleteUserRoleRelationship(@Param("userid") Integer userid, @Param("data") Data data);
+
+    List<Permission> queryPermissionsByUserid(Integer id);
 }

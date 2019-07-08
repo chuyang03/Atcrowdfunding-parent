@@ -176,4 +176,32 @@
         set name = #{name,jdbcType=VARCHAR}
         where id = #{id,jdbcType=INTEGER}
     </update>
+
+
+    <select id="queryCount" resultType="int">
+        select count(*) from t_role
+        <where>
+            <if test="queryText!=null">
+                name like concat('%',#{queryText},'%')
+            </if>
+        </where>
+    </select>
+
+    <select id="pageQuery" resultType="Role">
+        select * from t_role
+        <where>
+            <if test="queryText!=null">
+                name like concat('%',#{queryText},'%')
+            </if>
+        </where>
+        limit #{startIndex}, #{pagesize}
+    </select>
+
+    <insert id="insertRolePermission">
+		insert into t_role_permission(roleid,permissionid) values(#{roleid},#{permissionid})
+	</insert>
+
+    <delete id="deleteRolePermissionRelationship">
+    	delete from t_role_permission where roleid=#{roleid}
+    </delete>
 </mapper>

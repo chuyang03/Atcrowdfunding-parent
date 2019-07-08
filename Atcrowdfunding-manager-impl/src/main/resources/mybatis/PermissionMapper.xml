@@ -217,7 +217,7 @@
 
     <update id="updateByPrimaryKey" parameterType="com.atguigu.atcrowdfunding.bean.Permission" >
         update t_permission
-        set pid = #{pid,jdbcType=INTEGER},
+        set
             name = #{name,jdbcType=VARCHAR},
             icon = #{icon,jdbcType=VARCHAR},
             url = #{url,jdbcType=VARCHAR}
@@ -238,5 +238,9 @@
 <!--    查询所有许可树的内容-->
     <select id="queryAllPermission" resultMap="BaseResultMap">
         select id, pid, name, icon, url from t_permission
+    </select>
+
+    <select id="queryPermissionidsByRoleid" parameterType="int" resultType="int">
+        select permissionid from t_role_permission where roleid = #{roleid}
     </select>
 </mapper>

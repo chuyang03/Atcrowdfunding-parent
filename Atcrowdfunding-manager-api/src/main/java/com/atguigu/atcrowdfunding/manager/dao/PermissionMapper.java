@@ -34,4 +34,7 @@ public interface PermissionMapper {
     List<Permission> getChildrenPermissionByPid(Integer id);
 
     List<Permission> queryAllPermission();
+
+    //到t_role_permission表中查询，根据roleid查询出这个roleid对应的所有permissionid
+    List<Integer> queryPermissionidsByRoleid(Integer roleid);
 }
