@@ -57,4 +57,11 @@
         <property name="maxUploadSize" value="2097152"/>
         <property name="resolveLazily" value="true"/>
     </bean>
+
+    <!--配置拦截器，拦截所有请求，只有白名单能通过-->
+    <mvc:interceptors>
+        <bean id="loginInterceptor" class="com.atguigu.atcrowdfunding.interceptor.LoginInterceptor"></bean>
+
+        <bean id="authInterceptor" class="com.atguigu.atcrowdfunding.interceptor.AuthInterceptor"></bean>
+    </mvc:interceptors>
 </beans>

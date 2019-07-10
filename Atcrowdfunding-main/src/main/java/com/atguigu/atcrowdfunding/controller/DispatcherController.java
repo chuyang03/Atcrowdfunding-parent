@@ -13,9 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpSession;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Controller
 public class DispatcherController {
@@ -48,37 +46,7 @@ public class DispatcherController {
     @RequestMapping("/main")
     public String main(HttpSession session){
 
-        //加载当前登陆用户所拥有的许可权限
-        User user = (User)session.getAttribute(Const.LOGIN_USER);
-
-        List<Permission> myPermissions = userService.queryPermissionsByUserid(user.getId());
-
-        Permission permissionRoot = null;
-
-        Map<Integer, Permission> map = new HashMap<>();
-        for (Permission child: myPermissions){  //假如100次循环
-
-            map.put(child.getId(), child);
-        }
-
-        for (Permission permission: myPermissions){   //100次循环
-
-            Permission child = permission;
-            if (child.getPid() == 0){
-                //根节点
-                permissionRoot = permission;
-            }else {
-
-                //直接根据child的pid，从map中找出他的父节点
-                Permission parent = map.get(child.getPid());
-
-                //每个permission中都有一个list集合属性来存储孩子节点，
-                // 当遍历完所有节点时，所有的父节点中都封装了一个孩子节点集合属性
-                parent.getChildren().add(child);
-            }
-        }
-
-        session.setAttribute("permissionRoot", permissionRoot);
+        
 
         return "main";
     }
@@ -115,6 +83,49 @@ public class DispatcherController {
             User user = userService.queryUserLogin(paramMap);
 
             session.setAttribute(Const.LOGIN_USER, user);
+
+            //---------------------------------------------
+            //加载当前登陆用户所拥有的许可权限
+//            User user = (User)session.getAttribute(Const.LOGIN_USER);
+
+            List<Permission> myPermissions = userService.queryPermissionsByUserid(user.getId());
+
+            Permission permissionRoot = null;
+
+            Map<Integer, Permission> map = new HashMap<>();
+
+            //拦截器拦截许可权限
+            Set<String> myUris = new HashSet<>();
+
+            for (Permission child: myPermissions){  //假如100次循环
+
+                map.put(child.getId(), child);
+
+                myUris.add("/"+child.getUrl()); //用户所拥有的权限的访问路径
+            }
+
+            //把登陆用户的拥有访问权限的访问路径集合放到session域中
+            session.setAttribute(Const.MY_URIS, myUris);
+
+            for (Permission permission: myPermissions){   //100次循环
+
+                Permission child = permission;
+                if (child.getPid() == 0){
+                    //根节点
+                    permissionRoot = permission;
+                }else {
+
+                    //直接根据child的pid，从map中找出他的父节点
+                    Permission parent = map.get(child.getPid());
+
+                    //每个permission中都有一个list集合属性来存储孩子节点，
+                    // 当遍历完所有节点时，所有的父节点中都封装了一个孩子节点集合属性
+                    parent.getChildren().add(child);
+                }
+            }
+
+            session.setAttribute("permissionRoot", permissionRoot);
+            //---------------------------------------------
 
             result.setSuccess(true);
             //返回的值是一个json类型数据
