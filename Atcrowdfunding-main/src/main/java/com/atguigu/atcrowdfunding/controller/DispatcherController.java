@@ -46,7 +46,7 @@ public class DispatcherController {
     @RequestMapping("/main")
     public String main(HttpSession session){
 
-        
+
 
         return "main";
     }

@@ -23,6 +23,10 @@
         <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
     </listener>
 
+    <listener>
+        <listener-class>com.atguigu.atcrowdfunding.listener.StartSystemListener</listener-class>
+    </listener>
+
     <!-- 字符编码过滤器 ：
         只负责解决post乱码问题
 

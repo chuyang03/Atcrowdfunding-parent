@@ -23,16 +23,20 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
             throws Exception {
 
-        //1.获取所有权限
-        List<Permission> allPermissions = permissionService.queryAllPermission();
+        //1.获取所有权限   每次去数据库取数据较为消耗资源，可以在服务器启动时，放到application域中
+//        List<Permission> allPermissions = permissionService.queryAllPermission();
+//
+//        //所有许可的的所有访问路径
+//        Set<String> allUris = new HashSet<>();
+//
+//        for (Permission permission: allPermissions){
+//
+//            allUris.add("/"+permission.getUrl());
+//        }
 
-        //所有许可的的所有访问路径
-        Set<String> allUris = new HashSet<>();
 
-        for (Permission permission: allPermissions){
-
-            allUris.add("/"+permission.getUrl());
-        }
+        //改进效率，在服务器一启动时加载所有许可路径，并加入到application域
+        Set<String> allUris = (Set<String>)request.getSession().getServletContext().getAttribute(Const.ALL_PERMISSION_URI);
 
         //2.判断请求路径是否在所有许可范围内
         String servletPath = request.getServletPath();
