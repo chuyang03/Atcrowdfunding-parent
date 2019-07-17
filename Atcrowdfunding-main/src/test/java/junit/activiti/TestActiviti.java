@@ -1,5 +1,7 @@
 package junit.activiti;
 
+import com.atguigu.atcrowdfunding.activiti.listener.NoListener;
+import com.atguigu.atcrowdfunding.activiti.listener.YesListener;
 import org.activiti.engine.*;
 import org.activiti.engine.history.HistoricProcessInstance;
 import org.activiti.engine.history.HistoricProcessInstanceQuery;
@@ -39,7 +41,7 @@ public class TestActiviti {
 
         RepositoryService repositoryService = processEngine.getRepositoryService();
 
-        Deployment deploy = repositoryService.createDeployment().addClasspathResource("MyProcess7.bpmn").deploy();
+        Deployment deploy = repositoryService.createDeployment().addClasspathResource("MyProcess9.bpmn").deploy();
 
         System.out.println("deploy="+deploy);
     }
@@ -279,6 +281,41 @@ public class TestActiviti {
         //启动流程实例
         ProcessInstance processInstance = runtimeService.startProcessInstanceById(processDefinition.getId(), varMap);
         System.out.println("processInstance="+processInstance);
+
+    }
+
+    //12.测试流程监听器
+    @Test
+    public void test12(){
+
+        ProcessDefinition processDefinition = processEngine.getRepositoryService().createProcessDefinitionQuery().latestVersion().singleResult();
+
+        RuntimeService runtimeService = processEngine.getRuntimeService();
+
+        Map<String, Object> varMap = new HashMap<>();
+        varMap.put("yesListener", new YesListener());
+        varMap.put("noListener", new NoListener());
+
+        //启动流程实例
+        ProcessInstance processInstance = runtimeService.startProcessInstanceById(processDefinition.getId(), varMap);
+        System.out.println("processInstance="+processInstance);
+
+    }
+
+    @Test
+    public void test121(){
+
+        TaskService taskService = processEngine.getTaskService();
+        TaskQuery taskQuery = taskService.createTaskQuery();
+        List<Task> list = taskQuery.taskAssignee("zhangsan").list();
+
+        for (Task task:list
+        ) {
+
+            //给某个任务设置流程变量，这个表示组长审批通过
+            taskService.setVariable(task.getId(), "flag", "true");
+            taskService.complete(task.getId());
+        }
 
     }
 }

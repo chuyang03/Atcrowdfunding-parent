@@ -93,6 +93,7 @@
             }
         });
 
+        showMenu();
         loadData();
 
     });
