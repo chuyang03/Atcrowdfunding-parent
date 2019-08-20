@@ -41,7 +41,7 @@ public class TestActiviti {
 
         RepositoryService repositoryService = processEngine.getRepositoryService();
 
-        Deployment deploy = repositoryService.createDeployment().addClasspathResource("MyProcess9.bpmn").deploy();
+        Deployment deploy = repositoryService.createDeployment().addClasspathResource("MyProcess2.bpmn").deploy();
 
         System.out.println("deploy="+deploy);
     }

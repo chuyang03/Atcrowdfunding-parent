@@ -12,6 +12,7 @@
     <link rel="stylesheet" href="${APP_PATH }/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="${APP_PATH }/css/font-awesome.min.css">
     <link rel="stylesheet" href="${APP_PATH }/css/main.css">
+    <link rel="stylesheet" href="${APP_PATH }/css/pagination.css">
     <style>
         .tree li {
             list-style-type: none;
@@ -32,6 +33,7 @@
         <div id="navbar" class="navbar-collapse collapse">
             <ul class="nav navbar-nav navbar-right">
                 <li style="padding-top:8px;">
+
                     <%@include file="/WEB-INF/jsp/common/userinfo.jsp" %>
                 </li>
                 <li style="margin-left:10px;padding-top:8px;">
@@ -79,71 +81,22 @@
                             <thead>
                             <tr >
                                 <th width="30">#</th>
-                                <th>流程名称</th>
-                                <th>流程版本</th>
-                                <th>任务名称</th>
-                                <th>申请会员</th>
+                                <th>流程定义名称</th>
+                                <th>流程定义版本</th>
+                                <th>流程定义Key</th>
                                 <th width="100">操作</th>
                             </tr>
                             </thead>
                             <tbody>
-                            <tr>
-                                <td>1</td>
-                                <td>实名认证审批流程</td>
-                                <td>2</td>
-                                <td>人工审核</td>
-                                <td>张三</td>
-                                <td>
-                                    <button type="button" class="btn btn-success btn-xs"><i class=" glyphicon glyphicon-eye-open"></i></button>
-                                    <button type="button" class="btn btn-danger btn-xs"><i class=" glyphicon glyphicon-remove"></i></button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>2</td>
-                                <td>实名认证审批流程</td>
-                                <td>2</td>
-                                <td>人工审核</td>
-                                <td>张三</td>
-                                <td>
-                                    <button type="button" class="btn btn-success btn-xs"><i class=" glyphicon glyphicon-eye-open"></i></button>
-                                    <button type="button" class="btn btn-danger btn-xs"><i class=" glyphicon glyphicon-remove"></i></button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>3</td>
-                                <td>实名认证审批流程</td>
-                                <td>2</td>
-                                <td>人工审核</td>
-                                <td>张三</td>
-                                <td>
-                                    <button type="button" class="btn btn-success btn-xs"><i class=" glyphicon glyphicon-eye-open"></i></button>
-                                    <button type="button" class="btn btn-danger btn-xs"><i class=" glyphicon glyphicon-remove"></i></button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>4</td>
-                                <td>实名认证审批流程</td>
-                                <td>2</td>
-                                <td>人工审核</td>
-                                <td>张三</td>
-                                <td>
-                                    <button type="button" class="btn btn-success btn-xs"><i class=" glyphicon glyphicon-eye-open"></i></button>
-                                    <button type="button" class="btn btn-danger btn-xs"><i class=" glyphicon glyphicon-remove"></i></button>
-                                </td>
-                            </tr>
+
+                                <!--从后台返回的数据中取出来，拼串连接在tbody里面-->
+
                             </tbody>
                             <tfoot>
                             <tr >
                                 <td colspan="6" align="center">
-                                    <ul class="pagination">
-                                        <li class="disabled"><a href="#">上一页</a></li>
-                                        <li class="active"><a href="#">1 <span class="sr-only">(current)</span></a></li>
-                                        <li><a href="#">2</a></li>
-                                        <li><a href="#">3</a></li>
-                                        <li><a href="#">4</a></li>
-                                        <li><a href="#">5</a></li>
-                                        <li><a href="#">下一页</a></li>
-                                    </ul>
+
+                                    <div id="Pagination" class="pagination"><!-- 这里显示分页 --></div>
                                 </td>
                             </tr>
 
@@ -159,7 +112,10 @@
 <script src="${APP_PATH }/jquery/jquery-2.1.1.min.js"></script>
 <script src="${APP_PATH }/bootstrap/js/bootstrap.min.js"></script>
 <script src="${APP_PATH }/script/docs.min.js"></script>
+<script src="${APP_PATH}/jquery/layer/layer.js"></script>
+<script src="${APP_PATH}/jquery/pagination/jquery.pagination.js"></script>
 <script type="text/javascript">
+    //页面加载完就会执行这个函数
     $(function () {
         $(".list-group-item").click(function(){
             if ( $(this).find("ul") ) {
@@ -170,11 +126,139 @@
                     $("ul", this).show("fast");
                 }
             }
+        });2
+        showMenu();
+        queryPageUser(0);
+    });
+
+
+    $("#uploadPrcDefBtn").click(function(){  //click()函数增加回调函数这个参数,表示绑定事件.
+
+        $("#processDefFile").click(); //click()函数没有参数,表示触发单击事件.
+
+    });
+
+    $("#processDefFile").change(function(){
+
+        var options = {
+            url:"${APP_PATH}/process/deploy.do",
+            beforeSubmit : function(){
+                loadingIndex = layer.msg('数据正在部署中', {icon: 6});
+                return true ; //必须返回true,否则,请求终止.
+            },
+            success : function(result){
+                layer.close(loadingIndex);
+                if(result.success){
+                    layer.msg("部署成功", {time:1000, icon:6});
+                    queryPageUser(0);
+                }else{
+                    layer.msg(result.message, {time:1000, icon:5, shift:6});
+                }
+            }
+        };
+
+        $("#deployForm").ajaxSubmit(options); //异步提交
+        return ;
+
+    });
+
+
+
+
+
+    var jsonObj = {
+        "pageno" : 1,
+        "pagesize" : 10
+    };
+
+    var loadingIndex = -1 ;
+    function queryPageUser(pageIndex){
+        jsonObj.pageno = pageIndex + 1 ;
+        $.ajax({
+            type : "POST",
+            data : jsonObj,
+            url : "${APP_PATH}/process/doIndex.do",
+            beforeSend : function(){
+                loadingIndex = layer.load(2, {time: 10*1000});
+                return true ;
+            },
+            success : function(result){
+                layer.close(loadingIndex);
+                if(result.success){
+                    var page = result.page ;
+                    var data = page.datas ;
+
+                    var content = '';
+
+                    $.each(data,function(i,n){
+                        content+='<tr>';
+                        content+='  <td>'+(i+1)+'</td>';
+                        content+='  <td>'+n.name+'</td>';
+                        content+='  <td>'+n.version+'</td>';
+                        content+='  <td>'+n.key+'</td>';
+                        content+='  <td>';
+                        content+='	  <button type="button" onclick="window.location.href=\'${APP_PATH}/process/showimg.do?id='+n.id+'\'" class="btn btn-success btn-xs"><i class=" glyphicon glyphicon-eye-open"></i></button>';
+                        content+='	  <button type="button" onclick="deleteProDef(\''+n.id+'\',\''+n.name+'\')" class="btn btn-danger btn-xs"><i class=" glyphicon glyphicon-remove"></i></button>';
+                        content+='  </td>';
+                        content+='</tr>';
+                    });
+
+
+                    $("tbody").html(content);
+
+                    // 创建分页
+                    $("#Pagination").pagination(page.totalsize, {
+                        num_edge_entries: 1, //边缘页数
+                        num_display_entries: 2, //主体页数
+                        callback: queryPageUser,
+                        items_per_page:10, //每页显示1项
+                        current_page:(page.pageno-1),
+                        prev_text : "上一页",
+                        next_text : "下一页"
+                    });
+
+
+                }else{
+                    layer.msg(result.message, {time:1000, icon:5, shift:6});
+                }
+            },
+            error : function(){
+                layer.msg("加载数据失败!", {time:1000, icon:5, shift:6});
+            }
+        });
+    }
+
+
+
+    function deleteProDef(id,name){
+
+        layer.confirm("确认要删除["+name+"]流程定义吗?",  {icon: 3, title:'提示'}, function(cindex){
+            layer.close(cindex);
+            $.ajax({
+                type : "POST",
+                data : {
+                    "id" : id
+                },
+                url : "${APP_PATH}/process/doDelete.do",
+                beforeSend : function() {
+                    return true ;
+                },
+                success : function(result){
+                    if(result.success){
+                        queryPageUser(0);
+                    }else{
+                        layer.msg("删除流程定义失败", {time:1000, icon:5, shift:6});
+                    }
+                },
+                error : function(){
+                    layer.msg("删除流程定义失败", {time:1000, icon:5, shift:6});
+                }
+            });
+        }, function(cindex){
+            layer.close(cindex);
         });
 
-        //调用这个函数可以使左边导航栏点击的时候显示红色，并且将导航栏展开
-        showMenu();
-    });
+    }
 </script>
 
 <!-- 引用共有的js中的函数-->

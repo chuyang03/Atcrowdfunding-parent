@@ -4,11 +4,11 @@ import java.util.List;
 
 public class Page<T> {
 
-	private Integer pageno;
-	private Integer pagesize;
-	private List<T> datas;
-	private Integer totalsize;
-	private Integer totalno;
+	private Integer pageno;	//当前页
+	private Integer pagesize;	//每一页多少条数据
+	private List<T> datas;		//
+	private Integer totalsize;		//总共多少条数据
+	private Integer totalno;		//总共多少页
 
 	public Page(Integer pageno, Integer pagesize) {
 		if (pageno <= 0) {
@@ -64,6 +64,7 @@ public class Page<T> {
 		this.totalno = totalno;
 	}
 
+	//获取每一页开始数据的索引
 	public Integer getStartIndex() {
 		return (this.pageno - 1) * pagesize;
 	}
