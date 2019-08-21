@@ -73,10 +73,18 @@
                         <button type="button" class="btn btn-warning"><i class="glyphicon glyphicon-search"></i> 查询</button>
                     </form>
 
-                    <button type="button" class="btn btn-primary" style="float:right;" onclick="window.location.href='form.html'"><i class="glyphicon glyphicon-upload"></i> 上传流程定义文件</button>
+                    <button id="uploadProcessDefBtn" type="button" class="btn btn-primary" style="float:right;" ><i class="glyphicon glyphicon-upload"></i> 上传流程定义文件</button>
                     <br>
                     <hr style="clear:both;">
                     <div class="table-responsive">
+
+                        <!--设置流程定义文件上传的表单-->
+                        <form id="deployForm" action="" method="post" enctype="multipart/form-data">
+
+                            <!--style="display: none" 将输入框隐藏不显示-->
+                            <input id="processDefFile" style="display: none" type="file" name="processDefFile">
+                        </form>
+
                         <table class="table  table-bordered">
                             <thead>
                             <tr >
@@ -113,6 +121,7 @@
 <script src="${APP_PATH }/bootstrap/js/bootstrap.min.js"></script>
 <script src="${APP_PATH }/script/docs.min.js"></script>
 <script src="${APP_PATH}/jquery/layer/layer.js"></script>
+<script src="${APP_PATH }/jquery/jquery-form/jquery-form.min.js"></script>
 <script src="${APP_PATH}/jquery/pagination/jquery.pagination.js"></script>
 <script type="text/javascript">
     //页面加载完就会执行这个函数
@@ -132,7 +141,7 @@
     });
 
 
-    $("#uploadPrcDefBtn").click(function(){  //click()函数增加回调函数这个参数,表示绑定事件.
+    $("#uploadProcessDefBtn").click(function(){  //click()函数增加回调函数这个参数,表示绑定事件.
 
         $("#processDefFile").click(); //click()函数没有参数,表示触发单击事件.
 
@@ -198,6 +207,8 @@
                         content+='  <td>'+n.key+'</td>';
                         content+='  <td>';
                         content+='	  <button type="button" onclick="window.location.href=\'${APP_PATH}/process/showimg.do?id='+n.id+'\'" class="btn btn-success btn-xs"><i class=" glyphicon glyphicon-eye-open"></i></button>';
+
+                        //deleteProDef(\''+n.id+'\',\''+n.name+'\')   中的\'是将获取的参数变成字符串形式,程序运行后变成了deleteProDef('1','排他网管流程定义');根据这个函数删除当前流程定义
                         content+='	  <button type="button" onclick="deleteProDef(\''+n.id+'\',\''+n.name+'\')" class="btn btn-danger btn-xs"><i class=" glyphicon glyphicon-remove"></i></button>';
                         content+='  </td>';
                         content+='</tr>';
@@ -245,6 +256,8 @@
                 },
                 success : function(result){
                     if(result.success){
+
+                        //删除之后查询第一页，也可以显示当前页；0表示第一页，1表示第二页
                         queryPageUser(0);
                     }else{
                         layer.msg("删除流程定义失败", {time:1000, icon:5, shift:6});
