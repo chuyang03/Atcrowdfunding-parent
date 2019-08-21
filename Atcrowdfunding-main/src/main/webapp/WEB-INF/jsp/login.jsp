@@ -42,14 +42,14 @@
         </div>
         <div class="form-group has-success has-feedback">
             <select id="ftype" class="form-control" name="type" >
-                <option value="member">会员</option>
+                <option value="member" selected>会员</option>
                 <%--selected关键字表示默认是管理--%>
-                <option value="user" selected>管理</option>
+                <option value="user" >管理</option>
             </select>
         </div>
         <div class="checkbox">
             <label>
-                <input type="checkbox" value="remember-me"> 记住我
+                <input id="rememberme" type="checkbox" value="1"> 记住我
             </label>
             <br>
             <label>
@@ -95,6 +95,9 @@
             return false;
         }
 
+        //判断【记住我】这个复选框是否被选中;$("#rememberme")表示jquery对象；$("#rememberme")[0]表示DOM对象
+        var flag = $("#rememberme")[0].checked;
+
         var loadingIndex = -1;
         //使用ajax发送异步请求
         $.ajax({
@@ -103,7 +106,10 @@
             data : {
                 "loginacct" : floginacct.val(),
                 "userpswd" : fuserpswd.val(),
-                "type" : ftype.val()
+                "type" : ftype.val(),
+
+                //选中复选框【记住我】，值就是1
+                "rememberme": flag ? "1":"0"
             },
             url : "${APP_PATH}/doLogin.do",
             beforeSend : function(){
@@ -117,8 +123,20 @@
 
                 //result的值是这个：{"success":true}或者{"message":"登陆失败！", "success":false}
                 if (result.success) {
-                    //密码验证成功后跳转到主页面
-                    window.location.href = "${APP_PATH }/main.htm"
+
+                    if ("member"==result.data){
+
+                        //如果验证用户是会员用户，跳转到会员用户界面
+                        window.location.href = "${APP_PATH }/member.htm";
+                    } else if ("user"==result.data){
+
+                        //密码验证成功后跳转到主页面
+                        window.location.href = "${APP_PATH }/main.htm";
+                    } else {
+
+                        layer.msg("登陆用户类型不合法！", {time:1000, icon:5, shift:6});
+                    }
+
                 }else {
                     layer.msg(result.message, {time:1000, icon:5, shift:6});
                 }
