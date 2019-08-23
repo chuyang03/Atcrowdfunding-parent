@@ -20,4 +20,16 @@ public class MemberServiceImpl implements MemberService {
 
         return memberMapper.queryMemberLogin(paramMap);
     }
+
+    @Override
+    public void updateAcctType(Member loginMember) {
+
+        memberMapper.updateAcctType(loginMember);
+    }
+
+    @Override
+    public void updateBasicinfo(Member loginMember) {
+
+        memberMapper.updateBasicinfo(loginMember);
+    }
 }

@@ -31,4 +31,8 @@ public interface MemberMapper {
     int updateByPrimaryKey(Member record);
 
     Member queryMemberLogin(Map<String, Object> paramMap);
+
+    void updateAcctType(Member loginMember);
+
+    void updateBasicinfo(Member loginMember);
 }

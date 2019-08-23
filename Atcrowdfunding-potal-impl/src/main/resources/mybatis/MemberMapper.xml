@@ -13,6 +13,7 @@
         <result column="realname" property="realname" jdbcType="VARCHAR" />
         <result column="cardnum" property="cardnum" jdbcType="VARCHAR" />
         <result column="accttype" property="accttype" jdbcType="CHAR" />
+        <result column="tel" property="tel" jdbcType="VARCHAR" />
     </resultMap>
 
     <sql id="Example_Where_Clause" >
@@ -310,4 +311,20 @@
         select id, loginacct, userpswd, username, email, authstatus, usertype, realname, cardnum, accttype
         from t_member where loginacct = #{loginacct} and userpswd = #{userpswd}
     </select>
+
+
+    <update id="updateAcctType" parameterType="com.atguigu.atcrowdfunding.bean.Member" >
+        update t_member
+        set accttype = #{accttype,jdbcType=CHAR}
+        where id = #{id, jdbcType=INTEGER}
+    </update>
+
+    <update id="updateBasicinfo" parameterType="com.atguigu.atcrowdfunding.bean.Member" >
+
+        update t_member
+        set  realname = #{realname,jdbcType=VARCHAR},
+            cardnum = #{cardnum,jdbcType=VARCHAR},
+            tel = #{tel,jdbcType=VARCHAR}
+        where id = #{id, jdbcType=INTEGER}
+    </update>
 </mapper>
