@@ -1,31 +1,39 @@
 package com.atguigu.atcrowdfunding.manager.dao;
 
-import com.atguigu.atcrowdfunding.bean.Cert;
-import com.atguigu.atcrowdfunding.bean.CertExample;
-import org.apache.ibatis.annotations.Param;
-
 import java.util.List;
+import java.util.Map;
+
+import com.atguigu.atcrowdfunding.bean.Cert;
+import com.atguigu.atcrowdfunding.bean.MemberCert;
+import com.atguigu.atcrowdfunding.vo.Data;
 
 public interface CertMapper {
-    int countByExample(CertExample example);
 
-    int deleteByExample(CertExample example);
+//	Cert queryCert(Map<String, Object> paramMap);
 
-    int deleteByPrimaryKey(Integer id);
+	List<Cert> pageQuery(Map<String, Object> paramMap);
 
-    int insert(Cert record);
+	int queryCount(Map<String, Object> paramMap);
 
-    int insertSelective(Cert record);
+	void insertCert(Cert cert);
 
-    List<Cert> selectByExample(CertExample example);
+	Cert queryById(Integer id);
 
-    Cert selectByPrimaryKey(Integer id);
+	int updateCert(Cert cert);
 
-    int updateByExampleSelective(@Param("record") Cert record, @Param("example") CertExample example);
+	int deleteCert(Integer id);
 
-    int updateByExample(@Param("record") Cert record, @Param("example") CertExample example);
+	int deleteCerts(Data ds);
 
-    int updateByPrimaryKeySelective(Cert record);
+	List<Cert> queryCertByAccttype(String accttype);
 
-    int updateByPrimaryKey(Cert record);
+	List<Cert> queryAllCert();
+
+	List<Map<String, Object>> queryAllAccttypeCert();
+
+	int insertAccttypeCert(Map<String, Object> map);
+
+	int deleteAccttypeCert(Map<String, Object> map);
+
+	void insertMemberCert(MemberCert memberCert);
 }

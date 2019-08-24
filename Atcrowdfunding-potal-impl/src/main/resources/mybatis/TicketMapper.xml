@@ -46,6 +46,11 @@
         where memberid = #{memberid} and status = "0"
     </update>
 
+    <update id="updatePiidAndPstep" parameterType="com.atguigu.atcrowdfunding.bean.Ticket">
+        update t_ticket set pstep = #{pstep}, authcode = #{authcode}, piid = #{piid}
+        where memberid = #{memberid} and status = "0"
+    </update>
+
 
 
 </mapper>

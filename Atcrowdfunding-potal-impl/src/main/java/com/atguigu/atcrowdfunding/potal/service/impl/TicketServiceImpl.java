@@ -28,4 +28,10 @@ public class TicketServiceImpl implements TicketService {
 
         ticketMapper.updatePstep(ticket);
     }
+
+    @Override
+    public void updatePiidAndPstep(Ticket ticket) {
+
+        ticketMapper.updatePiidAndPstep(ticket);
+    }
 }

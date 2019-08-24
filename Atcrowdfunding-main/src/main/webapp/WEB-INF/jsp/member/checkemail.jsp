@@ -87,6 +87,7 @@
     <script src="${APP_PATH }/jquery/jquery-2.1.1.min.js"></script>
     <script src="${APP_PATH }/bootstrap/js/bootstrap.min.js"></script>
 	<script src="${APP_PATH }/script/docs.min.js"></script>
+    <script type="text/javascript" src="${APP_PATH }/jquery/layer/layer.js"></script>
 	<script>
         $('#myTab a').click(function (e) {
           e.preventDefault()
@@ -95,6 +96,7 @@
         
         
         $("#nextBtn").click(function(){
+            //启动邮箱验证流程实例
         	$.ajax({
         		type : "POST",
         		url  : "${APP_PATH}/member/startProcess.do",

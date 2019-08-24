@@ -41,8 +41,10 @@ public class TestActiviti {
 
         RepositoryService repositoryService = processEngine.getRepositoryService();
 
-        Deployment deploy = repositoryService.createDeployment().addClasspathResource("MyProcess2.bpmn").deploy();
+        Deployment deploy = repositoryService.createDeployment().addClasspathResource("auth.bpmn").deploy();
 
+        //根据流程部署的id删除流程定义
+        //repositoryService.deleteDeployment("2701");
         System.out.println("deploy="+deploy);
     }
 

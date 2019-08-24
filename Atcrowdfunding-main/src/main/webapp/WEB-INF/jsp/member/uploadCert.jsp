@@ -32,7 +32,7 @@
             <div id="navbar" class="navbar-collapse collapse" style="float:right;">
               <ul class="nav navbar-nav">
                 <li class="dropdown">
-                  <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="glyphicon glyphicon-user"></i> 张三<span class="caret"></span></a>
+                  <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="glyphicon glyphicon-user"></i> ${sessionScope.loginMember.username}<span class="caret"></span></a>
                   <ul class="dropdown-menu" role="menu">
                     <li><a href="member.html"><i class="glyphicon glyphicon-scale"></i> 会员中心</a></li>
                     <li><a href="#"><i class="glyphicon glyphicon-comment"></i> 消息</a></li>
@@ -61,8 +61,12 @@
 		</ul>
         
 		<form id="uploadCertForm" style="margin-top:20px;" method="post" enctype="multipart/form-data">
-		
-			<c:forEach items="${queryCertByAccttype }" var="cert" varStatus="status">
+
+            <!--certList  这个集合是根据当前登陆账户的实名认证类型获取到的资质类型，也就是当前账户类型需要哪些资质来认证;
+
+                varStatus="status" 这个属性表示迭代当前集合的状态值，${status.index }可以取出集合中当前cert的索引，就是第几个cert
+            -->
+			<c:forEach items="${certList }" var="cert" varStatus="status">
 				<div class="form-group">
 					<label for="name">${cert.name }</label>
 					<input type="hidden" name="certimgs[${status.index }].certid" value="${cert.id }">
@@ -105,7 +109,8 @@
           $(this).tab('show')
         });  
         
-        
+
+        //这段代码可以使上传资质图片在客户端预览
         $(":file").change(function(event){
         	var files = event.target.files;
         	var file;
@@ -137,6 +142,7 @@
            			layer.close(loadingIndex);
            			if(result.success){
            				layer.msg("数据保存成功", {time:1000, icon:6});
+           				//通过记忆功能判断当前流程进行到哪一步，直接跳转过去，而不是直接跳转到邮箱确认页面
            				window.location.href="${APP_PATH}/member/apply.htm";
            			}else{
            				layer.msg("数据保存失败", {time:1000, icon:5, shift:6});

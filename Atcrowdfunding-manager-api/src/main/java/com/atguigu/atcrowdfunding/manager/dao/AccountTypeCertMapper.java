@@ -5,6 +5,7 @@ import com.atguigu.atcrowdfunding.bean.AccountTypeCertExample;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
+import java.util.Map;
 
 public interface AccountTypeCertMapper {
     int countByExample(AccountTypeCertExample example);
@@ -28,4 +29,10 @@ public interface AccountTypeCertMapper {
     int updateByPrimaryKeySelective(AccountTypeCert record);
 
     int updateByPrimaryKey(AccountTypeCert record);
+
+    List<Map<String, Object>> queryCertAccttype();
+
+    int deleteAcctTypeCert(Map<String, Object> paramMap);
+
+    int insertAcctTypeCert(Map<String, Object> paramMap);
 }

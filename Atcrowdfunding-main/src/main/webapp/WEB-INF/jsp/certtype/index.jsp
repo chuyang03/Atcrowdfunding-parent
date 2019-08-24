@@ -116,7 +116,8 @@
 				});
 			    showMenu();
 			    
-	
+
+			    //将用户拥有的资质回显到分类管理的页面中，即拥有的资质后面打勾
 			    <c:forEach items="${certAccttypeList }" var="cert">
 			    	$(":checkbox[certid='${cert.certid}'][accttype='${cert.accttype}']")[0].checked=true ;
 			    </c:forEach>
@@ -131,13 +132,15 @@
 		    
             });
             
-            
+
+            //给复选框添加单击事件
             $(":checkbox").click(function(){
             	var flg = this.checked;
             	//通过this.certid能否获取自定义的属性值?
             	var certid = $(this).attr("certid");
             	var accttype = $(this).attr("accttype");
-            	
+
+            	//如果选中
             	if ( flg ) {
             		
             		// 增加账户类型和资质的关系

@@ -24,4 +24,6 @@ public interface TicketMapper {
     void saveTicket(Ticket ticket);
 
     void updatePstep(Ticket ticket);
+
+    void updatePiidAndPstep(Ticket ticket);
 }

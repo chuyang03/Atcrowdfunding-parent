@@ -1,5 +1,7 @@
 package com.atguigu.atcrowdfunding.bean;
 
+import org.springframework.web.multipart.MultipartFile;
+
 /**
  * 
  * 
@@ -7,7 +9,7 @@ package com.atguigu.atcrowdfunding.bean;
  * 
  * @date 2019-05-09
  */
-public class Member_cert {
+public class MemberCert {
     private Integer id;
 
     private Integer memberid;
@@ -15,6 +17,9 @@ public class Member_cert {
     private Integer certid;
 
     private String iconpath;
+
+
+    private MultipartFile fileImg;
 
     public Integer getId() {
         return id;
@@ -46,5 +51,13 @@ public class Member_cert {
 
     public void setIconpath(String iconpath) {
         this.iconpath = iconpath == null ? null : iconpath.trim();
+    }
+
+    public MultipartFile getFileImg() {
+        return fileImg;
+    }
+
+    public void setFileImg(MultipartFile fileImg) {
+        this.fileImg = fileImg;
     }
 }
