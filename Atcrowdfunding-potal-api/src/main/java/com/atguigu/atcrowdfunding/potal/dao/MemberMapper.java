@@ -39,4 +39,8 @@ public interface MemberMapper {
     void updateEmail(Member loginMember);
 
     void updateAuthstatus(Member loginMember);
+
+    Member getMemberById(Integer memberid);
+
+    List<Map<String, Object>> queryCertByMemberid(Integer memberid);
 }

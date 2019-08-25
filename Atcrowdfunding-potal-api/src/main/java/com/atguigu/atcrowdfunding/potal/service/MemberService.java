@@ -2,6 +2,7 @@ package com.atguigu.atcrowdfunding.potal.service;
 
 import com.atguigu.atcrowdfunding.bean.Member;
 
+import java.util.List;
 import java.util.Map;
 
 public interface MemberService {
@@ -16,4 +17,8 @@ public interface MemberService {
     void updateEmail(Member loginMember);
 
     void updateAuthstatus(Member loginMember);
+
+    Member getMemberById(Integer memberid);
+
+    List<Map<String, Object>> queryCertByMemberid(Integer memberid);
 }

@@ -1,5 +1,6 @@
 package com.atguigu.atcrowdfunding.potal.service.impl;
 
+import com.atguigu.atcrowdfunding.bean.Member;
 import com.atguigu.atcrowdfunding.bean.Ticket;
 import com.atguigu.atcrowdfunding.potal.dao.TicketMapper;
 import com.atguigu.atcrowdfunding.potal.service.TicketService;
@@ -33,5 +34,15 @@ public class TicketServiceImpl implements TicketService {
     public void updatePiidAndPstep(Ticket ticket) {
 
         ticketMapper.updatePiidAndPstep(ticket);
+    }
+
+    @Override
+    public Member queryMemberByPiid(String processInstanceId) {
+        return ticketMapper.queryMemberByPiid(processInstanceId);
+    }
+
+    @Override
+    public void updateStatus(Member member) {
+        ticketMapper.updateStatus(member);
     }
 }

@@ -85,7 +85,8 @@
                  </tr>
               </thead>
               <tbody>
-                
+
+                <!--这里显示从后台拿到的数据-->
               </tbody>
 			  <tfoot>
 			     <tr>
@@ -146,20 +147,20 @@
             			if ( result.success ) {
             				// 将查询结果循环遍历，将数据展现出来
             				var page = result.page;
-            				var taskList = page.data;
+            				var taskList = page.datas;
             				
             				var content = "";
             				$.each(taskList, function(i, task){
-	                content += '<tr>';
-	                content += '  <td>'+(i+1)+'</td>';
-	                content += '  <td>'+task.procDefName+'</td>';
-	                content += '  <td>'+task.procDefVersion+'</td>';
-	                content += '  <td>'+task.taskName+'</td>';
-	                content += '  <td>'+task.member.username+'</td>';
-	                content += '  <td>';
-	                content += '      <button type="button" onclick="window.location.href=\'${APP_PATH}/authcert/show.htm?taskid='+task.taskid+'&memberid='+task.member.id+'\'" class="btn btn-success btn-xs"><i class=" glyphicon glyphicon-check"></i></button>';
-		       content += '  </td>';
-	                content += '</tr>';
+                                content += '<tr>';
+                                content += '  <td>'+(i+1)+'</td>';
+                                content += '  <td>'+task.procDefName+'</td>';
+                                content += '  <td>'+task.procDefVersion+'</td>';
+                                content += '  <td>'+task.taskName+'</td>';
+                                content += '  <td>'+task.member.username+'</td>';
+                                content += '  <td>';
+                                content += '      <button type="button" onclick="window.location.href=\'${APP_PATH}/authcert/show.htm?taskid='+task.taskid+'&memberid='+task.member.id+'\'" class="btn btn-success btn-xs"><i class=" glyphicon glyphicon-check"></i></button>';
+                                content += '  </td>';
+                                content += '</tr>';
             				});  				       				
             				$("tbody").html(content);
             				

@@ -347,6 +347,7 @@ public class MemberController {
 
             //让当前系统用户完成:验证码审核任务.
             Ticket ticket = ticketService.getTicketByMemberId(loginMember.getId()) ;
+            //
             if(ticket.getAuthcode().equals(authcode)){
                 //完成审核验证码任务;  taskAssignee根据委托人查找任务
                 Task task = taskService.createTaskQuery().processInstanceId(ticket.getPiid())
